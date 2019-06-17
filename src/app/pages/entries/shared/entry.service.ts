@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, catchError } from 'rxjs/operators';
 
 import { Entry } from './entry.model';
 import { CategoryService } from '../../categories/shared/category.service';
@@ -16,42 +16,28 @@ export class EntryService extends BaseResourceService<Entry> {
     protected injector: Injector,
     private categoryService: CategoryService
     ) {
-      super('api/entries', injector);
+      super('api/entries',
+      injector,
+      Entry.fromJson
+      );
     }
 
   create(entry: Entry): Observable<Entry> {
-
-    return this.categoryService.getById(entry.categoryId).pipe(
-      flatMap(category => {
-        entry.category = category;
-
-        return super.create(entry);
-      })
-    )
+    return this.setCategoryAndSendToService(entry, super.create.bind(this));
   }
 
   update(entry: Entry): Observable<Entry> {
+    return this.setCategoryAndSendToService(entry, super.update.bind(this));
+  }
+
+  private setCategoryAndSendToService(entry: Entry, sendFn: any): Observable<Entry> {
     return this.categoryService.getById(entry.categoryId).pipe(
       flatMap(category => {
         entry.category = category;
 
-        return super.update(entry);
-      })
+        return sendFn(entry);
+      }),
+      catchError(this.handleError)
     );
-  }
-
-  protected jsonDataToResources(jsonData: any[]): Entry[] {
-    const entries: Entry[] = [];
-
-    console.log('>>', jsonData[0] as Entry);
-    console.log('>>', Object.assign(new Entry(), jsonData[0]) );
-
-    jsonData.forEach( element => entries.push(Object.assign(new Entry(), element)));
-
-    return entries;
-  }
-
-  protected jsonDataToResource(jsonData: any): Entry {
-    return Object.assign(new Entry(), jsonData);
   }
 }
