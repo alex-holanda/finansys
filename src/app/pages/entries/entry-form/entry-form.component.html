@@ -100,15 +100,10 @@
     </div>
   </div>
 
-  <div class="alert alert-danger mt-3" *ngIf="serverErrorMessages">
-    <strong>Erro no servidor</strong>
-    <ul>
-      <li *ngFor="let error of serverErrorMessages">{{error}}</li>
-    </ul>
-  </div>
-
   <button [disabled]="submittingForm || resourceForm.invalid" type="submit" class="btn btn-primary btn-lg mt-3 float-right">Salvar</button>
 
 </form>
+
+<app-server-error-messages [serverErrorMessages]="serverErrorMessages"></app-server-error-messages>
 
 <pre>{{ resourceForm.value | json }}</pre>

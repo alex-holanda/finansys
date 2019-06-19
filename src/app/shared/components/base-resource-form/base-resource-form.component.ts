@@ -67,11 +67,11 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
         switchMap(params => this.resourceService.getById(+params.get('id')))
       )
       .subscribe(
-        (resource) => {
+        resource => {
           this.resource = resource;
           this.resourceForm.patchValue(resource); // binds loaded resource data to category form
         },
-        (error) => alert('Ocorreu um erro no servidor, tente mais tarde')
+        error => alert('Ocorreu um erro no servidor, tente mais tarde')
       );
     }
   }
@@ -99,7 +99,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
       .subscribe(
         r => this.actionsForSuccess(r),
         error => this.actionsForError(error)
-      )
+      );
   }
 
   protected updateResource() {
@@ -108,7 +108,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
     this.resourceService.update(resource).subscribe(
       r => this.actionsForSuccess(r),
       error => this.actionsForError(error)
-    )
+    );
   }
 
   protected actionsForSuccess(resource: T) {
@@ -118,7 +118,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
 
     this.router.navigateByUrl(baseComponentPath, {skipLocationChange: true}).then(
      () => this.router.navigate([ baseComponentPath, resource.id, 'edit'])
-    )
+    );
   }
 
   protected actionsForError(error: any) {
