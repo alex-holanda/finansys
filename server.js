@@ -1,12 +1,12 @@
-const express = require('express');
 const path = require('path');
-const nomeApp = process.env.npm_package_name;
+const express = require('express');
+const appName = 'finansys';
 const app = express();
 
-app.use(express.static(`${__dirname}/dist/${nomeApp}`));
+app.use(express.static(`${__dirname}/dist/${appName}`));
 
-app.get('/*', (req, res) => {
-res.sendFile(path.join(`${__dirname}/dist/${nomeApp}/index.html`));
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(`${__dirname}/dist/${appName}/index.html`));
 });
 
 app.listen(process.env.PORT || 4200);

@@ -14,7 +14,7 @@ export abstract class BaseResourceListComponent<T extends BaseResourceModel> imp
     this.resourceService.getAll().subscribe(
       resources => this.resources = resources,
       error => alert('Erro ao carregar a lista')
-    )
+    );
   }
 
   deleteResource(resource) {
@@ -23,7 +23,7 @@ export abstract class BaseResourceListComponent<T extends BaseResourceModel> imp
       this.resourceService.delete(resource.id).subscribe(
         () => this.resources = this.resources.filter(element => element !== resource),
         () => alert('Erro ao tentar excluir')
-      )
+      );
     }
   }
 }
